@@ -1,0 +1,97 @@
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Git-Advanced</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+   </head>
+   <body>
+      <div class="container-fluid">
+         <div class="row">
+            <div class="col12">
+               <H1>Bad Microsoft</H1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col12">
+               <p>Når Visual Studio driller</p>
+               <p>Disse situationer dækkes ikke i undervisningen, men det forhindrer dem ikke i at opstå!</p>
+               <p>Af og til agerer Visual Studio ikke hensigtsmæssigt</p>
+            </div>
+         </div>
+         <div class="row" style="background-color:lightblue">
+            <div class="col12">
+               <h3>Swagger tool</h3>
+               <ul>
+                  <li>Jeg tilvalgte OpenAPI 3.0 - Men ingen browser starter op?</li>
+                  <li>Hvem har spist min Swagger page?</li>
+               </ul>
+               <b>Årsag</b>
+               <p>
+               Microsoft må have raget uklar med "domaindrivendev" som udvikler Swagger.<br/>
+               Tidligere var teksten "Enable Swagger..." men er ændret til "Enable OpenAPI 3.0".<br/>
+               "Enable OpenAPI 3.0" betyder at der genereres en JSON file med API beskrivelse. Men det åbner ikke en browser. Swagger er det interface som på baggrund af OpenAPI JSON filen kan lave et UI.<br/>
+               Der mangler derfor den kode som skal bringe UI op.
+               </p>
+               <b>Procedure</b>
+               <ul>
+                  <li>Åben din solution</li>
+                  <li>Åben "Tools-->NuGet Package Manager-->Manage Nuget Packages for Solution...</li>
+                  <li>Vælg "Browse" tab</li>
+                  <li>Indstaller "Swashbuckle.AspNetCore"</li>
+                  <li>Create en folder "Glue" i dit projekt/li>
+                  <li>Luk din solution</li>
+                  <li>Download "SwaggerGlue.zip" <a href="./SwaggerGlue.zip">SwaggerGlue.cs</A></li></li>
+                  <li>Kopier "Glue" folderen i zip filen til din projekt folder. (Den folder hvor du finder .csproj filen)</li>
+                  <li>Åben din solution</li>
+                  <li>Højreklik dit projekt og vælg "Add-->Existing item</li>
+                  <li>Naviger til "Glue" folderen og "SwaggerGlue.cs"</li>
+                  <li>Adder denne fil (Der vil nu være en ny folder i dit projekt kaldet "Glue")</li>
+                  <li>Ændrer indholdet i din "program.cs" fil til:</li>
+                  <li><pre style="background-color:lightyellow">
+using SwaggerGlue;                                       // This line is new.
+
+var builder = WebApplication.CreateBuilder(args);
+Glue openAPI = new Glue();                               // This line is new.
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// builder.Services.AddOpenApi();                        // This line was outcommented
+openAPI.ConfigureBuilderOpenAPI(builder);                // This line is new
+
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())                   // This line was outcommented
+//{                                                      // This line was outcommented
+//    app.MapOpenApi();                                  // This line was outcommented
+//}                                                      // This line was outcommented
+openAPI.ConfigureAppOpenAPI(app);                        // This line is new
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+                  </pre></li>
+                  <li>Åben project properties.</li>
+                  <li>Vælg "Debug"</li>
+                  <li>Klik "Open debug launch profile UI"</li>
+                  <li>Scroll ned og check "Launch browser"</li>
+                  <li>Sæt "Url" til "swagger"</li>
+                  <li>Det burde være det</li>
+               </ul>
+               <br/><br/>
+            </div>
+         </div>
+         <div class="row" style="background-color:white">
+            <div class="col12">
+               <br/>
+            </div>
+         </div>
+      </div>
+  </body>
+</html>
